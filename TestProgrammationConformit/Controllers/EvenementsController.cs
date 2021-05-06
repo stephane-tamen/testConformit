@@ -23,9 +23,19 @@ namespace TestProgrammationConformit.Controllers
 
         // GET: api/Evenements
         [HttpGet]
-        public  async Task<ICollection<Evenement>>  GetEvenements()
+        public async Task<ICollection<Evenement>> GetEvenements()
         {
             var evenements = await _context.Evenements.Include("Commentaires").ToListAsync();
+
+            return evenements;
+        }
+
+        // GET: api/Evenements/paginate
+
+        [HttpGet("paginate")]
+        public   IEnumerable<Evenement>  GetEvenements(int pageNumber, int pageSize)
+        {
+            var evenements =  _context.Evenements.Include("Commentaires").Skip((pageNumber-1) * pageSize).Take(pageSize);
             
             return evenements;
         }
@@ -34,7 +44,7 @@ namespace TestProgrammationConformit.Controllers
         [HttpGet("{id}")]
         public async Task<ICollection<Evenement>> GetEvenement(int id)
         {
-            var evenement = await _context.Evenements.Where(b=>b.Id==id).Include("Commentaires").ToListAsync();
+            var evenement = await _context.Evenements.Where(b => b.Id == id).Include("Commentaires").ToListAsync();
 
            /* if (evenement == null)
             {
